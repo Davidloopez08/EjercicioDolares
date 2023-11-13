@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import './App.css';
 
-const EURO_DOLAR = 1.2; // Debes definir el valor de conversión
+const EURO_DOLAR = 1.2;
+// Esto es la cantidad de euros en dolares
 
 const useCurrencyChangerState = () => {
   const [euros, setEuros] = useState(0);
