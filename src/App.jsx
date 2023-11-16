@@ -22,11 +22,11 @@ const CurrencyChanger = ({ currencySymbol, change, initialValue }) => {
   const { localAmount, euros, foreignCurrency, onInputChange } = useCurrencyChangerState(change, initialValue);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '50px' }}>
-      <div>
+    <div className="currency-container">
+      <div className="input-container">
         {currencySymbol}:{' '}
         <input
-          style={{ width: '150px' }}
+          className="input-field"
           type="number"
           step="0.01"
           value={localAmount}
@@ -34,17 +34,19 @@ const CurrencyChanger = ({ currencySymbol, change, initialValue }) => {
         />{' '}
         {currencySymbol}
       </div>
-      <div>Euros: {euros.toFixed(2)} €</div>
-      <div>
-        {currencySymbol === '$' ? 'Dólares' : currencySymbol === '£' ? 'Libras' : currencySymbol === '¥' ? 'Yen' : 'Otra Moneda'}:{' '}
-        {foreignCurrency.toFixed(2)} {currencySymbol}
+      <div className="result-container">
+        <div>Euros: {euros.toFixed(2)} €</div>
+        <div>
+          {currencySymbol === '$' ? 'Dólares' : currencySymbol === '£' ? 'Libras' : currencySymbol === '¥' ? 'Yen' : 'Otra Moneda'}:{' '}
+          {foreignCurrency.toFixed(2)} {currencySymbol}
+        </div>
       </div>
     </div>
   );
 };
 
 const App = () => (
-  <div>
+  <div className="app-container">
     <CurrencyChanger currencySymbol="$" initialValue={10} change={1.055925} />
     <CurrencyChanger currencySymbol="£" initialValue={15} change={0.8832} />
     <CurrencyChanger currencySymbol="¥" initialValue={2000} change={124.72} />
