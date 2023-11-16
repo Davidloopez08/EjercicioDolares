@@ -1,47 +1,54 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
-const EURO_DOLAR = 1.2;
-// Esto es la cantidad de euros en dolares
+const useCurrencyChangerState = (conversionRate, initialAmount) => {
+  const [localAmount, setLocalAmount] = useState(parseFloat(initialAmount));
 
-const useCurrencyChangerState = () => {
-  const [euros, setEuros] = useState(0);
-  const [dolars, setDolars] = useState(0);
-
-  const onInputChange = (value, inputType) => {
-    if (inputType === 'euros') {
-      setEuros(value);
-      setDolars(value * EURO_DOLAR);
-    } else if (inputType === 'dolars') {
-      setDolars(value);
-      setEuros(value / EURO_DOLAR);
+  const onInputChange = (value) => {
+    const parsedValue = parseFloat(value);
+    if (!isNaN(parsedValue)) {
+      setLocalAmount(parsedValue);
     }
   };
 
-  return { euros, dolars, onInputChange };
+  const conversionRateNumber = parseFloat(conversionRate);
+  const euros = localAmount / conversionRateNumber;
+  const foreignCurrency = euros * conversionRateNumber;
+
+  return { localAmount, euros, foreignCurrency, onInputChange };
 };
 
-const CurrencyChanger = () => {
-  const { euros, dolars, onInputChange } = useCurrencyChangerState();
+const CurrencyChanger = ({ currencySymbol, change, initialValue }) => {
+  const { localAmount, euros, foreignCurrency, onInputChange } = useCurrencyChangerState(change, initialValue);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '50px' }}>
       <div>
-        Euros: <input style={{ width: '150px' }} type="number" step="0.01" value={euros} onChange={(e) => onInputChange(e.target.value, 'euros')} /> €
+        {currencySymbol}:{' '}
+        <input
+          style={{ width: '150px' }}
+          type="number"
+          step="0.01"
+          value={localAmount}
+          onChange={(e) => onInputChange(e.target.value)}
+        />{' '}
+        {currencySymbol}
       </div>
+      <div>Euros: {euros.toFixed(2)} €</div>
       <div>
-        Dólares: <input style={{ width: '150px' }} type="number" step="0.01" value={dolars} onChange={(e) => onInputChange(e.target.value, 'dolars')} /> $
+        {currencySymbol === '$' ? 'Dólares' : currencySymbol === '£' ? 'Libras' : currencySymbol === '¥' ? 'Yen' : 'Otra Moneda'}:{' '}
+        {foreignCurrency.toFixed(2)} {currencySymbol}
       </div>
     </div>
   );
 };
 
-const MyApp = () => {
-  return (
-    <div>
-      <CurrencyChanger />
-    </div>
-  );
-};
+const App = () => (
+  <div>
+    <CurrencyChanger currencySymbol="$" initialValue={10} change={1.055925} />
+    <CurrencyChanger currencySymbol="£" initialValue={15} change={0.8832} />
+    <CurrencyChanger currencySymbol="¥" initialValue={2000} change={124.72} />
+  </div>
+);
 
-export default MyApp;
+export default App;
